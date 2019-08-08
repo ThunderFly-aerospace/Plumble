@@ -48,8 +48,4 @@ Contribute translations to Plumble using [Transifex](https://www.transifex.com/p
 Donate
 ------
 
-Plumble is a lot of work to develop! All donations are appreciated, via the paid version on Google Play or here.
-
-[Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ALTS7G56K2CGS)
-
-[Bitcoin](bitcoin:1ySD4UzFDtPLq9agRg9eiFtWmz6DJ7bBf?label=Plumble%20Donations) (1ySD4UzFDtPLq9agRg9eiFtWmz6DJ7bBf)
+https://wiki.mumble.info/wiki/Donate
