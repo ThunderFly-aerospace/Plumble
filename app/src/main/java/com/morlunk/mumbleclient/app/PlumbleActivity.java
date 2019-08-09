@@ -17,14 +17,18 @@
 
 package com.morlunk.mumbleclient.app;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import androidx.core.app.ActivityCompat;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import androidx.core.content.ContextCompat;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -98,6 +102,8 @@ public class PlumbleActivity extends AppCompatActivity implements ListView.OnIte
      * If specified, the provided integer drawer fragment ID is shown when the activity is created.
      */
     public static final String EXTRA_DRAWER_FRAGMENT = "drawer_fragment";
+
+    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
     private IPlumbleService mService;
     private PlumbleDatabase mDatabase;
@@ -241,6 +247,14 @@ public class PlumbleActivity extends AppCompatActivity implements ListView.OnIte
         setContentView(R.layout.activity_main);
 
         setStayAwake(mSettings.shouldStayAwake());
+
+        if (ContextCompat.checkSelfPermission(PlumbleActivity.this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(PlumbleActivity.this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    PERMISSIONS_REQUEST_RECORD_AUDIO);
+        }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
