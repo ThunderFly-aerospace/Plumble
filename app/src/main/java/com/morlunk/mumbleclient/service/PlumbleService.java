@@ -285,13 +285,13 @@ public class PlumbleService extends JumbleService implements
         mChannelOverlay = new PlumbleOverlay(this);
         mHotCorner = new PlumbleHotCorner(this, mSettings.getHotCornerGravity(), mHotCornerListener);
 
-        // Set up TTS
-        if(mSettings.isTextToSpeechEnabled())
-            mTTS = new TextToSpeech(this, mTTSInitListener);
-
         mTalkReceiver = new TalkBroadcastReceiver(this);
         mMessageLog = new ArrayList<>();
         mMessageNotification = new PlumbleMessageNotification(PlumbleService.this);
+
+        // Set up TTS
+        if(mSettings.isTextToSpeechEnabled())
+            mTTS = new TextToSpeech(this, mTTSInitListener);
     }
 
     @Override
