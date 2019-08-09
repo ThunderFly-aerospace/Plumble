@@ -17,6 +17,8 @@
 
 package com.morlunk.mumbleclient.service;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +36,7 @@ import com.morlunk.mumbleclient.R;
  */
 public class PlumbleReconnectNotification {
     private static final int NOTIFICATION_ID = 2;
+    private static final String CHANNEL_ID = "reconnect_channel";
     private static final String BROADCAST_DISMISS = "b_dismiss";
     private static final String BROADCAST_RECONNECT = "b_reconnect";
     private static final String BROADCAST_CANCEL_RECONNECT = "b_cancel_reconnect";
@@ -68,7 +71,24 @@ public class PlumbleReconnectNotification {
         mListener = listener;
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = mContext.getString(R.string.reconnect_notification_channel_name);
+            String description = mContext.getString(R.string.reconnect_notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     public void show(String error, boolean autoReconnect) {
+        createNotificationChannel();
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_DISMISS);
         filter.addAction(BROADCAST_RECONNECT);
@@ -79,7 +99,7 @@ public class PlumbleReconnectNotification {
             // Thrown if receiver is already registered.
             e.printStackTrace();
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
         builder.setSmallIcon(R.drawable.ic_stat_notify);
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setDefaults(NotificationCompat.DEFAULT_VIBRATE | NotificationCompat.DEFAULT_LIGHTS);

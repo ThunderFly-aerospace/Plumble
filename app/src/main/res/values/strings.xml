@@ -268,4 +268,10 @@
     <string name="shout_failed">Failed to create voice target!</string>
     <string name="shout_target">Shouting to %s</string>
     <string name="shout_configure">Configure Voice Target</string>
+    <string name="connection_notification_channel_name">Connection</string>
+    <string name="connection_notification_channel_description">Notification shown on open connection</string>
+    <string name="message_notification_channel_name">Messages</string>
+    <string name="message_notification_channel_description">Notifications shown about messages</string>
+    <string name="reconnect_notification_channel_name">Reconnect</string>
+    <string name="reconnect_notification_channel_description">Notification for auto-reconnect</string>
 </resources>

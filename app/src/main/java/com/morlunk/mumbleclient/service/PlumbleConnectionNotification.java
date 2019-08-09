@@ -18,6 +18,8 @@
 package com.morlunk.mumbleclient.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -36,6 +38,7 @@ import com.morlunk.mumbleclient.app.PlumbleActivity;
  */
 public class PlumbleConnectionNotification {
     private static final int NOTIFICATION_ID = 1;
+    private static final String CHANNEL_ID = "connection_channel";
     private static final String BROADCAST_MUTE = "b_mute";
     private static final String BROADCAST_DEAFEN = "b_deafen";
     private static final String BROADCAST_OVERLAY = "b_overlay";
@@ -95,6 +98,7 @@ public class PlumbleConnectionNotification {
      * Shows the notification and registers the notification action button receiver.
      */
     public void show() {
+        createNotificationChannel();
         createNotification();
 
         IntentFilter filter = new IntentFilter();
@@ -122,11 +126,27 @@ public class PlumbleConnectionNotification {
         mService.stopForeground(true);
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = mService.getString(R.string.connection_notification_channel_name);
+            String description = mService.getString(R.string.connection_notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = mService.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     /**
      * Called to update/create the service's foreground Plumble notification.
      */
     private Notification createNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mService);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mService, CHANNEL_ID);
         builder.setContentTitle(mService.getString(R.string.app_name));
         builder.setContentText(mCustomContentText);
         builder.setSmallIcon(R.drawable.ic_stat_notify);

@@ -18,6 +18,8 @@
 package com.morlunk.mumbleclient.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +42,7 @@ import java.util.List;
  */
 public class PlumbleMessageNotification {
     private static final int NOTIFICATION_ID = 2;
+    private static final String CHANNEL_ID = "message_channel";
     private static final long VIBRATION_PATTERN[] = { 0, 100 };
 
     private final Context mContext;
@@ -56,6 +59,7 @@ public class PlumbleMessageNotification {
      * @param message The message to notify the user about.
      */
     public void show(IMessage message) {
+        createNotificationChannel();
         mUnreadMessages.add(message);
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
@@ -70,7 +74,7 @@ public class PlumbleMessageNotification {
         // FLAG_CANCEL_CURRENT ensures that the extra always gets sent.
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, channelListIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.ic_stat_notify)
                 .setContentIntent(pendingIntent)
@@ -96,5 +100,21 @@ public class PlumbleMessageNotification {
         mUnreadMessages.clear();
         final NotificationManagerCompat manager = NotificationManagerCompat.from(mContext);
         manager.cancel(NOTIFICATION_ID);
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = mContext.getString(R.string.message_notification_channel_name);
+            String description = mContext.getString(R.string.message_notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
