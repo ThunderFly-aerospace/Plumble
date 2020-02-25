@@ -21,24 +21,24 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.6.0'
     }
 }
 apply plugin: 'com.android.application'
 
 repositories {
-    google()
     mavenCentral()
     jcenter()
+    google()
 }
 
 dependencies {
     implementation project(":libraries:Jumble")
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
 }
@@ -50,7 +50,8 @@ if (signingFile.exists()) apply from: 'signing.gradle'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
+    flavorDimensions "default"
 
     defaultConfig {
         minSdkVersion 21
