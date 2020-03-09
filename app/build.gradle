@@ -21,7 +21,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath 'com.android.tools.build:gradle:3.6.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -56,7 +56,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        applicationId "com.morlunk.mumbleclient"
+        applicationId "com.tf.mumbleclient"
         versionCode 73
         versionName "3.3.0-rc1"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
@@ -67,7 +67,7 @@ android {
 
         official {
             dimension "version"
-            applicationId "com.morlunk.mumbleclient"
+            applicationId "com.tf.mumbleclient"
         }
 
         jenkins {
@@ -79,9 +79,9 @@ android {
                 versionName env.get("BUILD_DISPLAY_NAME")
             } else {
                 versionCode 1
-                versionName "Unknown Nightly"
+                versionName "TF Nightly"
             }
-            applicationId "com.morlunk.mumbleclient.jenkins"
+            applicationId "com.tf.mumbleclient.jenkins"
         }
     }
 
